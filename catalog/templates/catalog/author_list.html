@@ -1,0 +1,22 @@
+{%  extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	
+	<h1>Authors' List</h1>
+	<hr>
+
+	{% if author_list %}
+		<ul>
+			{% for author in author_list %}
+				<li>
+					<a href="{{ author.get_absolute_url }}">{{ author.first_name }}, {{ author.last_name }}</a> 
+					({{ author.date_of_birth }})
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<div class="alert alert-warning">There are no book authors yet! </div>
+	{% endif %}
+
+{% endblock %}

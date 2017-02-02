@@ -1,0 +1,102 @@
+<!DOCTYPE <html>
+<head lang="en">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %} Local Library {% endblock %}</title>
+
+
+	<!-- Add additional CSS in static file -->	
+	  {% load staticfiles %}
+	  <link rel="stylesheet" href="{% static 'catalog/bootstrap/css/bootstrap.min.css' %}">
+	  <link rel="stylesheet" href="{% static 'catalog/css/style.css' %}">
+
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<p style="padding: 5px;"></p>
+			<div class="col-md-2">
+
+				{% block sidebar %}
+
+					<!--default navigation for every page-->
+					<ul class="sidebar-nav">
+						<li><a href="{% url 'index' %}">Home</a></li>
+						<li><a href="{% url 'books' %}">All Books</a></li>
+						<li><a href="{% url 'authors' %}">All Authors</a></li>
+
+						<hr>
+
+						{% if user.is_authenticated %}
+							<li>{{ user.get_username }} - {{ user.get_first_name }} {{ user.get_last_name }}</li>
+							<li><a href="{% url 'my-borrowed' %}">My Borrowed Books</a></li>
+							<li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
+
+							<!--user with can_mark_returned permissions-->
+							<hr>
+							{% if perms.catalog.can_mark_returned %}
+							    <!-- We can mark a BookInstance as returned. -->
+							    <li>Library Staff</li>
+							    <li><a href="{% url 'all-borrowed' %}">All Borrowed Books</a></li>
+							{% endif %}
+
+							{% if perms.catalog.can_create_edit_delete_authors %}
+								<li><a href="{% url 'author_create' %}">Add New Author</a></li>
+							{% endif %}
+
+							{% if perms.catalog.can_create_edit_delete_books %}
+								<li><a href="{% url 'book_create' %}">Add New Book</a></li>
+							{% endif %}
+
+						{% else %}
+							<li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
+						{% endif %}
+
+
+					</ul>
+
+				{% endblock %}
+
+			</div>
+
+
+			<div class="col-md-10">
+
+				{% block content %}
+
+					<!--default content text (typically empty) -->
+
+				{% endblock %}
+
+
+				{% block pagination %}
+
+				  {% if is_paginated %}
+				      <div class="pagination">
+				          <span class="page-links">
+				              {% if page_obj.has_previous %}
+				                  <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+				              {% endif %}
+				              <span class="page-current">
+				                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+				              </span>
+				              {% if page_obj.has_next %}
+				                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+				              {% endif %}
+				          </span>
+				      </div>
+				  {% endif %}
+
+				{% endblock %}
+
+			</div>
+
+		</div>
+	</div>
+
+	<script src="{% static 'catalog/js/jquery.js' %}"></script>
+	<script src="{% static 'catalog/bootstrap/js/bootstrap.min.js' %}"></script>
+
+</body>
+</html>

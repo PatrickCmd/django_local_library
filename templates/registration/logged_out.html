@@ -1,0 +1,11 @@
+{% extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+	<p>Logged out</p>
+
+	<a href="{% url 'login' %}">Click here to Login again</a>	
+
+{% endblock %}

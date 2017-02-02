@@ -1,0 +1,28 @@
+{% extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+	<h1>
+		Author:  {{ author.first_name }}, {{ author.last_name }}
+
+		{% if perms.catalog.can_create_edit_delete_authors %}
+			<a class="btn btn-info btn-sm" href="{% url 'author_update' author.pk %}">Edit Author</a> | 
+			<a class="btn btn-danger btn-sm" href="{% url 'author_delete' author.pk %}">Delete Author</a>
+		{% endif %}
+
+	</h1>
+	<p><small>{{ author.date_of_birth }}</small></p>
+
+	<div style="margin-left: 20px; margin-top: 20px;">
+		<h4>Books</h4>
+
+		{% for book in author.book_set.all %}
+			<p style="color: blue;">{{ book.title }}</p>
+			<p>{{ book.summary }}</p>
+		{% endfor %}
+	</div>
+
+
+{% endblock %}
